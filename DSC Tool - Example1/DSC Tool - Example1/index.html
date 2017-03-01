@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href="Content/font-awesome.min.css" rel="stylesheet" />
+	<meta charset="utf-8" />
+</head>
+<body ng-app="DSCApp">
+
+    <div ng-controller="mainController" ng-init="init()">
+
+
+        <div class="form-group">
+            Region:
+            <select class="form-control" ng-options="item as item.Name for item in regions" ng-model="selectedRegion" ng-change="getWells(selectedRegion)">
+                <option value="">-- Choose Region --</option>
+            </select>
+        </div>
+
+
+        <div class="form-group" ng-show="selectedRegion">
+            Well:
+            <select class="form-control" ng-options="item as item.Name for item in wells" ng-model="selectedWell" ng-change="getCompletions(selectedWell)">
+                <option value="">-- Choose Well --</option>
+            </select>
+        </div>
+
+
+        <div class="form-group" ng-show="selectedWell && selectedRegion">
+            Completions:
+            <select class="form-control" ng-options="item as item.Name for item in completions" ng-model="selectedCompletion" ng-change="getAttributes(selectedCompletion)">
+                <option value="">-- Choose Completion --</option>
+            </select>
+        </div>
+
+        <div > 
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="isShowAllChecked" ng-click="showAll()"> Show all
+                </label>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            <a href="#" ng-click="sortType = 'attribute'; sortReverse = !sortReverse">
+                                Attribute
+                                <span ng-show="sortType == 'attribute'" class="{{sortReverse ? 'fa fa-caret-up' : 'fa fa-caret-down' }}"></span>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="#" ng-click="sortType = 'instrumenttag'; sortReverse = !sortReverse">
+                                Instrument tag
+                                <span ng-show="sortType == 'instrumenttag'" ng-class="sortReverse ? 'fa fa-caret-up' : 'fa fa-caret-down' "></span>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="#" ng-click="sortType = 'status'; sortReverse = !sortReverse">
+                                Status
+                                <span ng-show="sortType == 'status'" ng-class="sortReverse ? 'fa fa-caret-up' : 'fa fa-caret-down' "></span>
+                            </a>
+                        </th>
+                    </tr>
+
+                </thead>
+
+                <tr ng-style="{'background-color': attributeAndTag.Selected ? 'lightBlue' : '' }" ng-repeat="attributeAndTag in attributesAndTags | orderBy:sortType:sortReverse | filter:{Hide: 'false'}" ng-mousedown="RowClick(attributeAndTag,false)" >
+                    <td>{{attributeAndTag.Attribute.Name}}</td>
+                    <td>
+                        <!--<input class="form-control" ng-type="text" ng-model="instrumentTagArray[$index]">-->
+                        <input type="text" class="form-control"  ng-model="attributeAndTag.Value" >
+                        
+                    </td>
+                    <td>{{attributeAndTag.Status}}</td>
+                </tr>
+                
+
+        <!--<tr ng-repeat="attribute in attributes ">
+            <td>{{attribute.Name}}</td>
+            <td ng-repeat="childAttribute in attribute.Attributes | filter:childAttribute.Name = 'Instrument Tag'">{{childAttribute.Value}}</td>
+            <td></td>
+        </tr>-->
+        </table>
+
+        <button type="button" class="btn btn-success float-right" ng-click="updateAttributes()">Update</button>
+            
+    </div>
+        {{'Status: ' + generalStatus}}
+
+    </div>
+
+    <script src="Scripts/jquery-3.1.1.min.js"></script>
+    <script src="Scripts/angular.js"></script>
+    <script src="Scripts/underscore-min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="App/mainController.js"></script>
+
+</body>
+</html>
